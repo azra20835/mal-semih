@@ -3,24 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mal Semih</title>
+<title>Dart Oyunu</title>
 
 <style>
 body{
     margin:0;
     background:#111;
     color:white;
-    font-family:Arial,sans-serif;
     text-align:center;
-}
-
-h2{
-    margin-top:15px;
-}
-
-#score{
-    font-size:22px;
-    font-weight:bold;
+    font-family:Arial;
 }
 
 #board{
@@ -30,7 +21,6 @@ h2{
     margin:20px auto;
     border-radius:50%;
     overflow:hidden;
-    box-shadow:0 0 25px black;
     background:
     radial-gradient(circle,
     #00aa00 0%, #00aa00 5%,
@@ -55,17 +45,17 @@ h2{
 
 .arrow{
     position:absolute;
-    width:80px;
-    height:20px;
-    transform-origin:left center;
+    font-size:40px;
+    transform-origin:center center;
     pointer-events:none;
 }
 </style>
 </head>
+
 <body>
 
-<h2>Mal Semih 🎯</h2>
-<div>Puan: <span id="score">0</span></div>
+<h2>Dart Oyunu 🎯</h2>
+<p>Puan: <span id="score">0</span></p>
 
 <div id="board">
     <img src="ben.jpg" id="centerImg">
@@ -74,21 +64,13 @@ h2{
 <script>
 const board = document.getElementById("board");
 const scoreText = document.getElementById("score");
+
 let score = 0;
 
-function makeArrow() {
+function makeArrow(){
     const div = document.createElement("div");
     div.className = "arrow";
-
-    div.innerHTML = `
-    <svg width="80" height="20" viewBox="0 0 80 20">
-        <polygon points="0,10 12,2 12,18" fill="red"/>
-        <polygon points="6,10 18,0 18,20" fill="#ff8888"/>
-        <rect x="12" y="8" width="50" height="4" fill="#8B5A2B"/>
-        <polygon points="62,10 80,2 80,18" fill="silver"/>
-    </svg>
-    `;
-
+    div.innerHTML = "🏹";
     return div;
 }
 
@@ -107,25 +89,22 @@ function shoot(x,y){
     const dx = x - startX;
     const dy = y - startY;
 
-    const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+    const angle = Math.atan2(dy,dx) * 180 / Math.PI;
 
-    let frame = 0;
-    const totalFrames = 40;
+    let step = 0;
+    const total = 30;
 
     const anim = setInterval(() => {
 
-        frame++;
+        step++;
 
-        const p = frame / totalFrames;
+        const p = step / total;
 
-        const nx = startX + dx * p;
-        const ny = startY + dy * p;
-
-        arrow.style.left = nx + "px";
-        arrow.style.top = ny + "px";
+        arrow.style.left = (startX + dx * p) + "px";
+        arrow.style.top = (startY + dy * p) + "px";
         arrow.style.transform = `rotate(${angle}deg)`;
 
-        if(frame >= totalFrames){
+        if(step >= total){
 
             clearInterval(anim);
 
@@ -142,24 +121,17 @@ function shoot(x,y){
     },10);
 }
 
-board.addEventListener("click",(e)=>{
+board.addEventListener("click", e=>{
     const r = board.getBoundingClientRect();
-    shoot(
-        e.clientX - r.left,
-        e.clientY - r.top
-    );
+    shoot(e.clientX-r.left, e.clientY-r.top);
 });
 
-board.addEventListener("touchstart",(e)=>{
+board.addEventListener("touchstart", e=>{
     const r = board.getBoundingClientRect();
     const t = e.touches[0];
-
-    shoot(
-        t.clientX - r.left,
-        t.clientY - r.top
-    );
+    shoot(t.clientX-r.left, t.clientY-r.top);
 });
 </script>
-alert("Kod çalıştı");
+
 </body>
 </html>
