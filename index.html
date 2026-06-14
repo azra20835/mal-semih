@@ -88,7 +88,7 @@ function makeArrow(){
     const img = document.createElement("img");
 
     // SADECE BU RESİM KULLANILIR
-    img.src = "ok2.png";
+    img.src = "ok2.png?" + Date.now();
 
     div.appendChild(img);
 
@@ -141,7 +141,7 @@ function shoot(x,y){
             else if(dist < 80) score += 20;
             else if(dist < 130) score += 10;
             else score += 5;
-
+<img src="ok2.png" width="200">
             scoreText.textContent = score;
         }
 
