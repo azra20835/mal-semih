@@ -11,7 +11,16 @@ body{
     background:#111;
     color:white;
     text-align:center;
-    font-family:Arial;
+    font-family:Arial,sans-serif;
+}
+
+h2{
+    margin-top:15px;
+}
+
+#score{
+    font-size:24px;
+    font-weight:bold;
 }
 
 #board{
@@ -21,6 +30,7 @@ body{
     margin:20px auto;
     border-radius:50%;
     overflow:hidden;
+    box-shadow:0 0 25px black;
     background:
     radial-gradient(circle,
     #00aa00 0%, #00aa00 5%,
@@ -45,13 +55,19 @@ body{
 
 .arrow{
     position:absolute;
-    font-size:40px;
-    transform-origin:center center;
+    width:80px;
+    height:20px;
+    transform-origin:left center;
     pointer-events:none;
+}
+
+.arrow img{
+    width:80px;
+    height:20px;
+    display:block;
 }
 </style>
 </head>
-
 <body>
 
 <h2>Dart Oyunu 🎯</h2>
@@ -70,7 +86,7 @@ let score = 0;
 function makeArrow(){
     const div = document.createElement("div");
     div.className = "arrow";
-    div.innerHTML = "🏹";
+    div.innerHTML = '<img src="ok.png">';
     return div;
 }
 
@@ -91,20 +107,23 @@ function shoot(x,y){
 
     const angle = Math.atan2(dy,dx) * 180 / Math.PI;
 
-    let step = 0;
-    const total = 30;
+    let frame = 0;
+    const totalFrames = 35;
 
     const anim = setInterval(() => {
 
-        step++;
+        frame++;
 
-        const p = step / total;
+        const p = frame / totalFrames;
 
-        arrow.style.left = (startX + dx * p) + "px";
-        arrow.style.top = (startY + dy * p) + "px";
+        const nx = startX + dx * p;
+        const ny = startY + dy * p;
+
+        arrow.style.left = nx + "px";
+        arrow.style.top = ny + "px";
         arrow.style.transform = `rotate(${angle}deg)`;
 
-        if(step >= total){
+        if(frame >= totalFrames){
 
             clearInterval(anim);
 
@@ -123,13 +142,20 @@ function shoot(x,y){
 
 board.addEventListener("click", e=>{
     const r = board.getBoundingClientRect();
-    shoot(e.clientX-r.left, e.clientY-r.top);
+    shoot(
+        e.clientX - r.left,
+        e.clientY - r.top
+    );
 });
 
 board.addEventListener("touchstart", e=>{
     const r = board.getBoundingClientRect();
     const t = e.touches[0];
-    shoot(t.clientX-r.left, t.clientY-r.top);
+
+    shoot(
+        t.clientX - r.left,
+        t.clientY - r.top
+    );
 });
 </script>
 
