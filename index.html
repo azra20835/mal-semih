@@ -14,15 +14,6 @@ body{
     font-family:Arial,sans-serif;
 }
 
-h2{
-    margin-top:15px;
-}
-
-#score{
-    font-size:24px;
-    font-weight:bold;
-}
-
 #board{
     position:relative;
     width:360px;
@@ -55,19 +46,25 @@ h2{
 
 .arrow{
     position:absolute;
-    width:80px;
-    height:20px;
+    width:90px;
+    height:25px;
     transform-origin:left center;
     pointer-events:none;
 }
 
 .arrow img{
-    width:80px;
-    height:20px;
+    width:90px;
+    height:25px;
     display:block;
+}
+
+#score{
+    font-size:24px;
+    font-weight:bold;
 }
 </style>
 </head>
+
 <body>
 
 <h2>Dart Oyunu 🎯</h2>
@@ -84,9 +81,17 @@ const scoreText = document.getElementById("score");
 let score = 0;
 
 function makeArrow(){
+
     const div = document.createElement("div");
     div.className = "arrow";
-    div.innerHTML = '<img src="ok.png">';
+
+    const img = document.createElement("img");
+
+    // SADECE BU RESİM KULLANILIR
+    img.src = "ok2.png";
+
+    div.appendChild(img);
+
     return div;
 }
 
@@ -108,7 +113,7 @@ function shoot(x,y){
     const angle = Math.atan2(dy,dx) * 180 / Math.PI;
 
     let frame = 0;
-    const totalFrames = 35;
+    const totalFrames = 40;
 
     const anim = setInterval(() => {
 
@@ -121,13 +126,16 @@ function shoot(x,y){
 
         arrow.style.left = nx + "px";
         arrow.style.top = ny + "px";
-        arrow.style.transform = `rotate(${angle}deg)`;
+
+        arrow.style.transform =
+            `rotate(${angle}deg)`;
 
         if(frame >= totalFrames){
 
             clearInterval(anim);
 
-            const dist = Math.sqrt(dx*dx + dy*dy);
+            const dist =
+                Math.sqrt(dx*dx + dy*dy);
 
             if(dist < 30) score += 50;
             else if(dist < 80) score += 20;
@@ -140,16 +148,22 @@ function shoot(x,y){
     },10);
 }
 
-board.addEventListener("click", e=>{
-    const r = board.getBoundingClientRect();
+board.addEventListener("click", e => {
+
+    const r =
+        board.getBoundingClientRect();
+
     shoot(
         e.clientX - r.left,
         e.clientY - r.top
     );
 });
 
-board.addEventListener("touchstart", e=>{
-    const r = board.getBoundingClientRect();
+board.addEventListener("touchstart", e => {
+
+    const r =
+        board.getBoundingClientRect();
+
     const t = e.touches[0];
 
     shoot(
