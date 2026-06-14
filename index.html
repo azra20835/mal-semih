@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mal Semih</title>
+
+<style>
+body{
+  margin:0;
+  background:#111;
+  color:white;
+  font-family:Arial;
+  text-align:center;
+}
+
+#board{
+  position:relative;
+  width:360px;
+  height:360px;
+  margin:20px auto;
+  border-radius:50%;
+  background: radial-gradient(circle,
+    #fff 0%, #fff 5%,
+    #e53935 5%, #e53935 10%,
+    #fff 10%, #fff 15%,
+    #000 15%, #000 25%,
+    #fff 25%, #fff 35%,
+    #e53935 35%, #e53935 50%,
+    #222 50%, #222 100%);
+  overflow:hidden;
+  box-shadow:0 0 25px black;
+}
+
+#centerImg{
+  position:absolute;
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  object-fit:cover;
+  border:3px solid white;
+}
+
+/* GERÇEK OK GÖRSELİ */
+.arrow{
+  position:absolute;
+  width:70px;
+  height:20px;
+  transform-origin:left center;
+  pointer-events:none;
+}
+
+#score{
+  font-size:22px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Dart Oyunu 🎯</h2>
+<p>Puan: <span id="score">0</span></p>
+
+<div id="board">
+  <img src="ben.jpg" id="centerImg">
+</div>
+
+<script>
+let score = 0;
+const board = document.getElementById("board");
+const scoreText = document.getElementById("score");
+
+// 🔥 GERÇEK OK GÖRSELİ (internet üzerinden)
+const ARROW_IMG = "https://upload.wikimedia.org/wikipedia/commons/6/6f/Arrow_icon.svg";
+
+function makeArrow(){
+  const div = document.createElement("div");
+  div.className = "arrow";
+
+  const img = document.createElement("img");
+  img.src = ARROW_IMG;
+
+  img.style.width = "70px";
+  img.style.height = "20px";
+
+  div.appendChild(img);
+
+  return div;
+}
+
+function shoot(x,y){
+
+  const arrow = makeArrow();
+
+  const startX = 180;
+  const startY = 180;
+
+  arrow.style.left = startX + "px";
+  arrow.style.top = startY + "px";
+
+  board.appendChild(arrow);
+
+  const dx = x - startX;
+  const dy = y - startY;
+
+  const angle = Math.atan2(dy,dx) * 180/Math.PI;
+
+  let t = 0;
+  const steps = 50;
+
+  const anim = setInterval(()=>{
+
+    t++;
+    const p = t/steps;
+
+    const nx = startX + dx*p;
+    const ny = startY + dy*p - Math.sin(p*Math.PI)*60;
+
+    arrow.style.left = nx + "px";
+    arrow.style.top = ny + "px";
+
+    arrow.style.transform = `rotate(${angle}deg)`;
+
+    if(t>=steps){
+      clearInterval(anim);
+
+      // saplanma
+      const dist = Math.sqrt(dx*dx + dy*dy);
+
+      if(dist<30) score+=50;
+      else if(dist<80) score+=20;
+      else if(dist<130) score+=10;
+      else score+=5;
+
+      scoreText.textContent = score;
+    }
+
+  },12);
+}
+
+board.addEventListener("click",e=>{
+  const r=board.getBoundingClientRect();
+  shoot(e.clientX-r.left,e.clientY-r.top);
+});
+
+board.addEventListener("touchstart",e=>{
+  const r=board.getBoundingClientRect();
+  const t=e.touches[0];
+  shoot(t.clientX-r.left,t.clientY-r.top);
+});
+</script>
+
+</body>
+</html>
