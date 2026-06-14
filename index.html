@@ -14,6 +14,15 @@ body{
     font-family:Arial,sans-serif;
 }
 
+h2{
+    margin-top:15px;
+}
+
+#score{
+    font-size:24px;
+    font-weight:bold;
+}
+
 #board{
     position:relative;
     width:360px;
@@ -22,6 +31,7 @@ body{
     border-radius:50%;
     overflow:hidden;
     box-shadow:0 0 25px black;
+
     background:
     radial-gradient(circle,
     #00aa00 0%, #00aa00 5%,
@@ -48,7 +58,7 @@ body{
     position:absolute;
     width:90px;
     height:25px;
-    transform-origin:left center;
+    transform-origin:15px center;
     pointer-events:none;
 }
 
@@ -56,11 +66,7 @@ body{
     width:90px;
     height:25px;
     display:block;
-}
-
-#score{
-    font-size:24px;
-    font-weight:bold;
+    user-select:none;
 }
 </style>
 </head>
@@ -68,6 +74,7 @@ body{
 <body>
 
 <h2>Dart Oyunu 🎯</h2>
+
 <p>Puan: <span id="score">0</span></p>
 
 <div id="board">
@@ -75,29 +82,28 @@ body{
 </div>
 
 <script>
+
 const board = document.getElementById("board");
 const scoreText = document.getElementById("score");
 
 let score = 0;
 
-function makeArrow(){
+function createArrow(){
 
-    const div = document.createElement("div");
-    div.className = "arrow";
+    const arrow = document.createElement("div");
+    arrow.className = "arrow";
 
     const img = document.createElement("img");
+    img.src = "ok.png";
 
-    // SADECE BU RESİM KULLANILIR
-    img.src = "ok2.png?" + Date.now();
+    arrow.appendChild(img);
 
-    div.appendChild(img);
-
-    return div;
+    return arrow;
 }
 
 function shoot(x,y){
 
-    const arrow = makeArrow();
+    const arrow = createArrow();
 
     const startX = 180;
     const startY = 180;
@@ -110,12 +116,13 @@ function shoot(x,y){
     const dx = x - startX;
     const dy = y - startY;
 
-    const angle = Math.atan2(dy,dx) * 180 / Math.PI;
+    const angle =
+        Math.atan2(dy,dx) * 180 / Math.PI;
 
     let frame = 0;
-    const totalFrames = 40;
+    const totalFrames = 30;
 
-    const anim = setInterval(() => {
+    const anim = setInterval(()=>{
 
         frame++;
 
@@ -141,17 +148,16 @@ function shoot(x,y){
             else if(dist < 80) score += 20;
             else if(dist < 130) score += 10;
             else score += 5;
-<img src="ok2.png" width="200">
+
             scoreText.textContent = score;
         }
 
     },10);
 }
 
-board.addEventListener("click", e => {
+board.addEventListener("click",(e)=>{
 
-    const r =
-        board.getBoundingClientRect();
+    const r = board.getBoundingClientRect();
 
     shoot(
         e.clientX - r.left,
@@ -159,10 +165,9 @@ board.addEventListener("click", e => {
     );
 });
 
-board.addEventListener("touchstart", e => {
+board.addEventListener("touchstart",(e)=>{
 
-    const r =
-        board.getBoundingClientRect();
+    const r = board.getBoundingClientRect();
 
     const t = e.touches[0];
 
@@ -171,6 +176,7 @@ board.addEventListener("touchstart", e => {
         t.clientY - r.top
     );
 });
+
 </script>
 
 </body>
